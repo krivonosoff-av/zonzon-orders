@@ -1,0 +1,42 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: dev
+  h2.console.enabled: true
+  datasource:
+    url: jdbc:h2:mem:orderdb
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    initialization-mode: always
+    continue-on-error: false
+    hikari:
+      minimum-idle: 5
+      connection-test-query: SELECT 1 FROM DUAL
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: AssetHikariCP
+      max-lifetime: 60000
+      connection-timeout: 30000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    open-in-view: true
+logging:
+  level:
+    ru.cbr.crabr: debug
+    org.hibernate.SQL: info
+    org.hibernate.type: off
+    org.springframework: ERROR
+    com.fasterxml.jackson: ERROR
+    org.springframework.web: ERROR
+    org.springframework.security: ERROR
+    org.springframework.transaction.interceptor: TRACE
