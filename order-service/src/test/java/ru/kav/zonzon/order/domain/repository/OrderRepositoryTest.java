@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.kav.zonzon.order.domain.model.Order;
+import ru.kav.zonzon.order.domain.model.Person;
 import ru.kav.zonzon.order.domain.model.Product;
 
 import java.math.BigDecimal;
@@ -23,25 +24,30 @@ public class OrderRepositoryTest {
     private ProductRepository productRepository;
 
     @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
     private OrderRepository orderRepository;
 
     private Product product;
+    private Person person;
 
     @BeforeEach
     protected void init() {
+        person = personRepository.save(Person.builder().name("test").build());
         product = productRepository.save(Product.builder().price(BigDecimal.valueOf(1)).name("test").build());
     }
 
     @Test
     public void createOrderWillSuccess() {
         var order = orderRepository.save(Order.builder()
-                .clientId(1L)
+                .person(person)
                 .build());
         Assertions.assertEquals(1, orderRepository.count());
     }
 
     @Test
     public void createOrderWillFail() {
-        orderRepository.save(Order.builder().clientId(1L).build());
+        orderRepository.save(Order.builder().person(person).build());
     }
 }

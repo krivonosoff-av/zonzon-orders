@@ -6,7 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import ru.kav.zonzon.order.domain.model.Person;
 import ru.kav.zonzon.order.domain.model.Product;
+import ru.kav.zonzon.order.domain.repository.PersonRepository;
 import ru.kav.zonzon.order.domain.repository.ProductRepository;
 
 import javax.transaction.Transactional;
@@ -28,8 +30,13 @@ public class OrderApplication {
 
         private final ProductRepository productRepository;
 
+        private final PersonRepository personRepository;
+
         @Override
         public void run(String... args) throws Exception {
+
+            personRepository.saveAll(List.of(Person.builder().name("Andrei Krivonosov").build()));
+
             productRepository.saveAll(List.of(
                 Product.builder().name("Большая бродилка").price(BigDecimal.valueOf(3500.50)).build(),
                 Product.builder().name("Мачикоро").price(BigDecimal.valueOf(999.99)).build(),

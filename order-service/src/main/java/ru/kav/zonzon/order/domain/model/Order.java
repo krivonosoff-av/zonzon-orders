@@ -21,17 +21,16 @@ import java.util.List;
 public class Order extends AbstractPersistable<Long> {
 
     @Builder
-    public Order(Long clientId) {
-        this.clientId = clientId;
+    public Order(Person person) {
+        this.person = person;
     }
 
     @NotNull
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
-    @NotNull
-    @Column(nullable = false)
-    private Long clientId;
+    @ManyToOne
+    private Person person;
 
     @PositiveOrZero
     @Column(nullable = false)
@@ -49,6 +48,7 @@ public class Order extends AbstractPersistable<Long> {
     }
 
     public void calculateTotal() {
-        total = products.stream().map(Product::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        total = products.stream().map(Product::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -11,8 +11,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import ru.kav.zonzon.order.domain.model.Order;
+import ru.kav.zonzon.order.domain.model.Person;
 import ru.kav.zonzon.order.domain.model.Product;
 import ru.kav.zonzon.order.domain.repository.OrderRepository;
+import ru.kav.zonzon.order.domain.repository.PersonRepository;
 import ru.kav.zonzon.order.domain.repository.ProductRepository;
 
 import java.net.URI;
@@ -33,20 +35,26 @@ public class OrderControllerTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private PersonRepository personRepository;
+
     private final Supplier<URI> ordersUri = () -> URI.create("http://localhost:" + port + "/api/orders");
 
     private Order order;
 
     private List<Product> products;
 
+    private List<Person> persons;
+
     @BeforeEach
     protected void init() {
+        products = productRepository.findAll();
+        persons = personRepository.findAll();
+
         order = restTemplate.postForObject(ordersUri.get(),
-                Order.builder().clientId(1L).build(),
+                Order.builder().person(persons.get(0)).build(),
                 Order.class);
         Assertions.assertNotNull(order);
-
-        products = productRepository.findAll();
     }
 
     @Test

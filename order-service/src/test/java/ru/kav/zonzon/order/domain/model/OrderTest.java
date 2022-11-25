@@ -8,13 +8,16 @@ import java.math.BigDecimal;
 
 public class OrderTest {
 
+    private Person person;
     private Order order;
     private Product product1;
     private Product product2;
 
     @BeforeEach
     protected void init() {
-        order = Order.builder().clientId(1L).build();
+        person = Person.builder().name("test").build();
+
+        order = Order.builder().person(person).build();
 
         product1 = Product.builder()
                 .name("test")
