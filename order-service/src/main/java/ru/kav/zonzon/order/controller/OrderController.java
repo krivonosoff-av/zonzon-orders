@@ -39,6 +39,20 @@ public class OrderController {
         return orderRepository.save(order);
     }
 
+    @PostMapping("/orders/{orderId}/product")
+    @ResponseBody
+    public Order addProduct2(@PathVariable("orderId") Long orderId, @RequestBody Product product) {
+        var order = orderRepository.findById(orderId)
+                .stream()
+                .peek(o -> o.addProduct(productRepository.findById(product.getId())
+                        .orElseThrow(IllegalArgumentException::new)))
+                .findAny()
+                .orElseThrow(IllegalArgumentException::new);
+
+        return orderRepository.save(order);
+    }
+
+
     @PostMapping("/orders/{orderId}/addProduct/{productId}")
     @ResponseBody
     public Order addProduct(@PathVariable("orderId") Long orderId, @PathVariable("productId") Long productId) {
